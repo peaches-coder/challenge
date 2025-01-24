@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>股票666</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .search-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h2>请输入股票代码</h2>
+        <input type="text" id="stockCode" placeholder="例如：688001" />
+        <button onclick="generateLink()">跳转</button>
+    </div>
+
+    <script>
+        // 固定的URL部分
+        const baseURL = "https://star.sse.com.cn/star/market/stocklist/info/index/index.shtml?COMPANY_CODE=";
+        function generateLink() {
+            let stockCode = document.getElementById("stockCode").value.trim();
+
+            if (!stockCode) {
+                alert("请输入股票代码！");
+                return;
+            }
+
+            // 创建完整的URL
+            let fullURL = baseURL + stockCode;
+
+            // 跳转到新的链接
+            window.location.href = fullURL;
+        }
+
+        // 监听回车键事件
+        document.getElementById("stockCode").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                generateLink();
+            }
+        });
+    </script>
+</body>
+</html>
