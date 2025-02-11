@@ -13,6 +13,9 @@
         #predictionResult {
             margin-top: 20px;
         }
+        .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -28,16 +31,29 @@
         <p id="buySellAdvice"></p>
         <p id="addPositionAdvice"></p>
         <div id="monthlyKChart"></div>
+        <p id="errorMessage" class="error"></p>
     </div>
 
     <script>
         document.getElementById('stockForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            const stockCode = document.getElementById('stockCode').value;
+            const stockCode = document.getElementById('stockCode').value.trim();
+            document.getElementById('errorMessage').innerText = ''; // 清除之前的错误信息
+
+            if (!stockCode) {
+                document.getElementById('errorMessage').innerText = '请输入有效的股票代码';
+                return;
+            }
 
             fetch(`/predict?stockCode=${stockCode}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络错误，请稍后再试');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    // 更新买卖建议和加仓建议
                     document.getElementById('buySellAdvice').innerText = `买入/卖出建议: ${data.advice}`;
                     document.getElementById('addPositionAdvice').innerText = `加仓建议: ${data.add_position_advice}`;
 
@@ -54,6 +70,10 @@
                         xaxis: { title: '日期' },
                         yaxis: { title: '价格' }
                     });
+                })
+                .catch(error => {
+                    // 错误处理
+                    document.getElementById('errorMessage').innerText = error.message || '发生了未知错误';
                 });
         });
     </script>
